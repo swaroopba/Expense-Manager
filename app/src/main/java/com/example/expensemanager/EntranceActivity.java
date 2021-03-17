@@ -65,7 +65,18 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
     }
 
     @Override
-    public void onDatePressed(String message) {
+    public void onDatePressed(String date) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(kDateString, date);
+
+        AddExpenseFragment addFragment = new AddExpenseFragment();
+        addFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragmentContainer, addFragment);
+        fragmentTransaction.addToBackStack("addFragment");
+        fragmentTransaction.commit();
 
     }
 
@@ -102,8 +113,20 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
     }
 
     @Override
-    public void onMonthYearPressed(String message) {
+    public void onMonthYearPressed(String date) {
 
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+        Log.d("ERROR", "onMonthYearPressed->"+date);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(kDateString, date);
+
+        DateSelectionFragment dateSelectionFragment = new DateSelectionFragment();
+        dateSelectionFragment.setArguments(bundle);
+
+        fragmentTransaction.replace(R.id.fragmentContainer, dateSelectionFragment);
+        fragmentTransaction.addToBackStack("datePickerFragment");
+        fragmentTransaction.commit();
     }
 }

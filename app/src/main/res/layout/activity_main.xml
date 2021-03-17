@@ -12,11 +12,4 @@
         android:layout_height="match_parent"
         />
 
-<!--    <fragment-->
-<!--        android:id="@+id/calenderFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:name="com.example.expensemanager.CalenderFragment"-->
-<!--        />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_margin="20dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Date Picker"
+        android:textSize="30dp"
+        android:gravity="center"/>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="5"
+    tools:context=".DateSelectionFragment"
+    android:columnCount="3"
+    android:rowCount="3">
+
+    <!-- 1 row -->
+    <Button
+        android:id="@+id/up1"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+    <Button
+        android:id="@+id/up2"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+    <Button
+        android:id="@+id/up3"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+
+    <!-- 2 row -->
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="2"
+        android:text="31"
+        android:textSize="50sp"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/monthText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="2"
+        android:text="2"
+        android:textSize="50sp"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/yearText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="2"
+        android:text="2013"
+        android:textSize="50sp"
+        android:gravity="center"
+        />
+
+    <!-- 3 row -->
+    <Button
+        android:id="@+id/down1"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+    <Button
+        android:id="@+id/down2"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+    <Button
+        android:id="@+id/down3"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        />
+
+</GridLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/selectButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Select"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            />
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Cancel"
+            />
+    </LinearLayout>
+</LinearLayout>

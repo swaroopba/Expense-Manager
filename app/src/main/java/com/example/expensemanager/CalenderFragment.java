@@ -116,7 +116,7 @@ public class CalenderFragment extends Fragment {
         tempDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMessageTransaction.onMonthYearPressed("How are you");
+                onMessageTransaction.onMonthYearPressed(date+"/"+month+"/"+year);
             }
         });
 
