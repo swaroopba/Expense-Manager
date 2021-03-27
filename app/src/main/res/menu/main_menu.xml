@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/calender"
+        android:title="Calender"/>
+    <item
+        android:id="@+id/addExpense"
+        android:title="Add Expense"/>
+    <item
+        android:id="@+id/viewExpense"
+        android:title="View Expense"/>
+</menu>

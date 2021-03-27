@@ -1,11 +1,15 @@
 package com.example.expensemanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -16,6 +20,9 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
 
     private final String kDateString = "DateString";
     private final String kIsItCurrentDate = "IsItCurrentDate";
+    private final String kStartDate = "StartDate";
+    private final String kEndDate = "EndDate";
+    private final String kTag = "Tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,46 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
             prevMonth = currentMonth - 1;
         }
         addFragment(current.get(0)+"/"+prevMonth+"/"+current.get(2), false, true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Calendar cal = Calendar.getInstance();
+        String date = cal.get(Calendar.DAY_OF_MONTH)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.YEAR);;
+        switch (item.getItemId())
+        {
+            case R.id.calender:
+                addFragment(date, true, true);
+                break;
+            case R.id.addExpense:
+                onDatePressed(date);
+                break;
+            case R.id.viewExpense:
+                DisplayExpenseFragment frag = new DisplayExpenseFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(kStartDate, "");
+                bundle.putString(kEndDate, "");
+                bundle.putString(kTag, "");
+
+                frag.setArguments(bundle);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragmentContainer, frag);
+                ft.addToBackStack("addExpense");
+                ft.commit();
+                break;
+
+        }
+
+        return true;
     }
 
     @Override

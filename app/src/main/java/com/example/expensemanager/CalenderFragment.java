@@ -80,7 +80,6 @@ public class CalenderFragment extends Fragment {
 
         Calendar c2 = Calendar.getInstance();
         c2.set(year, month-1, date);
-        Log.d("ERROR",c2.toString());
         c2.set(Calendar.DAY_OF_MONTH, 1);
         Integer startDateMonth = c2.get(Calendar.DAY_OF_WEEK);
         Integer totalDaysInMonth = c2.getActualMaximum(Calendar.DAY_OF_MONTH);

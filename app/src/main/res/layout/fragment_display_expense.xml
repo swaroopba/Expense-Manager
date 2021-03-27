@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DisplayExpenseFragment"
-    android:id="@+id/displayLinear">
+    android:id="@+id/totalDisplayLinear"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/topFilters"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tagFilter"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Tag"
+            android:textSize="20sp"
+            />
+        <Spinner
+            android:layout_marginLeft="-20dp"
+            android:id="@+id/tagFilterVal"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:background="@color/purple_700"
+            />
+        <Button
+            android:id="@+id/startDateButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="StartDate"
+            />
+        <Button
+            android:id="@+id/endDateButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="EndDate"
+            />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayLinear"
+        android:orientation="vertical"
+        >
 
-</ScrollView>
+    </LinearLayout>
+</LinearLayout>

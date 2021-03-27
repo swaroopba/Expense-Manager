@@ -17,6 +17,11 @@ import java.util.Calendar;
 public class DateSelectionFragment extends Fragment {
 
     private final String kDateString = "DateString";
+    private final String kIsFilter = "IsFilter";
+    private final String kChooseOption = "ChooseOption";
+    private final String kStartDate = "StartDate";
+    private final String kEndDate = "EndDate";
+    private final String kTag = "Tag";
     //private final String kIsItCurrentDate = "IsItCurrentDate";
 
     private String dateString;
@@ -30,6 +35,11 @@ public class DateSelectionFragment extends Fragment {
     private TextView monthText;
     private TextView yearText;
     private Button up1;
+    private Boolean isCalledForFiltering;
+    private String tag;
+    private String startDate;
+    private String endDate;
+    private String chooseOption;
 
     public DateSelectionFragment() {
         // Required empty public constructor
@@ -41,6 +51,14 @@ public class DateSelectionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             dateString = getArguments().getString(kDateString);
+            isCalledForFiltering = getArguments().getBoolean(kIsFilter);
+            if (isCalledForFiltering)
+            {
+                tag = getArguments().getString(kTag);
+                startDate = getArguments().getString(kStartDate);
+                endDate = getArguments().getString(kEndDate);
+                chooseOption = getArguments().getString(kChooseOption);
+            }
 
             String dateStr[] = dateString.split("/");
             date = Integer.parseInt(dateStr[0]);
@@ -206,14 +224,39 @@ public class DateSelectionFragment extends Fragment {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
 
-                AddExpenseFragment addFragment = new AddExpenseFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString(kDateString, (dateText.getText().toString()+"/"+monthText.getText().toString()+"/"+yearText.getText().toString()));
-                addFragment.setArguments(bundle);
 
-                ft.addToBackStack("Sample");
-                ft.replace(R.id.fragmentContainer, addFragment);
-                ft.commit();
+                if (!isCalledForFiltering) {
+                    AddExpenseFragment addFragment = new AddExpenseFragment();
+                    bundle.putString(kDateString, (dateText.getText().toString()+"/"+monthText.getText().toString()+"/"+yearText.getText().toString()));
+                    addFragment.setArguments(bundle);
+
+                    ft.addToBackStack("Sample");
+                    ft.replace(R.id.fragmentContainer, addFragment);
+                    ft.commit();
+                }
+                else {
+
+                    if (chooseOption == kStartDate)
+                    {
+                        startDate = (dateText.getText().toString()+"/"+monthText.getText().toString()+"/"+yearText.getText().toString());
+                    }
+                    else
+                    {
+                        endDate = (dateText.getText().toString()+"/"+monthText.getText().toString()+"/"+yearText.getText().toString());
+                    }
+
+                    DisplayExpenseFragment displayFragment = new DisplayExpenseFragment();
+                    bundle.putString(kStartDate, startDate);
+                    bundle.putString(kEndDate, endDate);
+                    bundle.putString(kTag, tag);
+                    displayFragment.setArguments(bundle);
+
+                    ft.addToBackStack("Sample");
+                    ft.replace(R.id.fragmentContainer, displayFragment);
+                    ft.commit();
+                }
+
             }
         });
 
