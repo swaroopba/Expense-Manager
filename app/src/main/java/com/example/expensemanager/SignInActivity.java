@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -35,15 +39,27 @@ public class SignInActivity<Integer> extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-//        storeGoogleSignInDetails(account);
-//        launchEntranceActivity();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            storeGoogleSignInDetails(account);
+            launchEntranceActivity();
+        }
+//        else{
+//            Bundle bundle = new Bundle();
+//            onCreate(bundle);
+//        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+        String signInMessage = "Sign in with your account.";
+        Spannable span = new SpannableString(signInMessage);
+        span.setSpan(new RelativeSizeSpan(1.5f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        TextView signIn = findViewById(R.id.titleName);
+        signIn.setText(span);
 
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);

@@ -29,6 +29,8 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d("ERROR","EntranceActivity onCreate");
+
         Calendar cal = Calendar.getInstance();
         String date = cal.get(Calendar.DAY_OF_MONTH)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.YEAR);
         addFragment(date, true, false);
@@ -68,7 +70,7 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
         switch (item.getItemId())
         {
             case R.id.calender:
-                addFragment(date, true, true);
+                addFragment(date, true, false);
                 break;
             case R.id.addExpense:
                 onDatePressed(date);

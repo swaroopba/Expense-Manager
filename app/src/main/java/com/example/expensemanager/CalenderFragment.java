@@ -8,6 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +65,7 @@ public class CalenderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             dateString = getArguments().getString(kDateString);
             isItCurrentDate = getArguments().getBoolean(kIsItCurrentDate);
@@ -70,7 +75,7 @@ public class CalenderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+//        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calender, container, false);
 
         String dateList[] = dateString.split("/");
@@ -99,7 +104,10 @@ public class CalenderFragment extends Fragment {
             }
             else
             {
-                refButton.setText(numDays.toString());
+                String tempStr = numDays.toString();
+                Spannable span = new SpannableString(tempStr);
+                span.setSpan(new RelativeSizeSpan(0.8f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                refButton.setText(span);
                 refButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -136,13 +144,6 @@ public class CalenderFragment extends Fragment {
         });
 
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
     }
 
     private void sendDate(String day)

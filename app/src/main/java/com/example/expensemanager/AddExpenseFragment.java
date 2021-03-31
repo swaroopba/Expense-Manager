@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,8 +87,9 @@ public class AddExpenseFragment extends Fragment {
             year = Integer.parseInt(dateSplit[2]);
 
             SharedPreferences sp = getActivity().getSharedPreferences(kSharedPrefName, Context.MODE_PRIVATE);
-            signInEmail = sp.getString(kSignInEmail, "");
-            myRef = database.getReference("Users/"+signInEmail+"/ExpenseEvent");
+            signInEmail = sp.getString(kSignInId, "");
+            Log.d("ERROR", "Signed email->"+signInEmail);
+            myRef = database.getReference("Users");
         }
     }
 
@@ -95,7 +100,9 @@ public class AddExpenseFragment extends Fragment {
 
         TextView dateText = view.findViewById(R.id.dateStr);
         String dateTextValue = dayOfMonth.toString()+" "+getMonthName(month)+" "+year.toString();
-        dateText.setText(dateTextValue);
+        Spannable span = new SpannableString(dateTextValue);
+        span.setSpan(new RelativeSizeSpan(1.5f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        dateText.setText(span);
 
         EditText amountText = view.findViewById(R.id.amount);
         EditText newTag = view.findViewById(R.id.newTag);
@@ -183,7 +190,7 @@ public class AddExpenseFragment extends Fragment {
 
     private void getAvailableTags()
     {
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(signInEmail).child(kExpenseList).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> iter = snapshot.getChildren();
@@ -229,7 +236,7 @@ public class AddExpenseFragment extends Fragment {
     {
             Log.d("ERROR","add to DB");
             ExpenseEvent newEvent = new ExpenseEvent(date, amount, tag, comment);
-            myRef.push().setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+            myRef.child(signInEmail).child(kExpenseList).push().setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     Toast.makeText(getContext(), "Added data successfully!!", Toast.LENGTH_SHORT).show();

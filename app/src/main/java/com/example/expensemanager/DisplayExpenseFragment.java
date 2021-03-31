@@ -1,5 +1,7 @@
 package com.example.expensemanager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,9 +46,13 @@ public class DisplayExpenseFragment extends Fragment {
     private final String kStartDate = "StartDate";
     private final String kEndDate = "EndDate";
     private final String kTag = "Tag";
+    final private String kSignInEmail = "SignInEmail";
+    final private String kSignInId = "SignInID";
+    final private String kSharedPrefName = "com.example.ExpenseManager";
+    private final String kExpenseList = "ExpenseList";
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Users/ExpenseEvent");
+    DatabaseReference myRef = database.getReference("Users");
     Integer screenWidth;
     Integer screenHeight;
     String startDate;
@@ -53,7 +61,9 @@ public class DisplayExpenseFragment extends Fragment {
     Query queryToListen;
     Integer previousTagIndex;
     Boolean checkTag;
+    String selectedItemToDelete;
     private Set<String> tagSet;
+    private String signInEmail;
 
     public DisplayExpenseFragment() {
         // Required empty public constructor
@@ -72,6 +82,10 @@ public class DisplayExpenseFragment extends Fragment {
         startDate = getArguments().getString(kStartDate);
         endDate = getArguments().getString(kEndDate);
         tag = getArguments().getString(kTag);
+
+        SharedPreferences sp = getActivity().getSharedPreferences(kSharedPrefName, Context.MODE_PRIVATE);
+        signInEmail = sp.getString(kSignInId, "");
+        myRef = database.getReference("Users/"+signInEmail+"/"+kExpenseList);
 
         Point screenSize = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
@@ -220,6 +234,34 @@ public class DisplayExpenseFragment extends Fragment {
             }
         });
 
+
+        Button deleteBut = view.findViewById(R.id.deleteMeButton);
+        deleteBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!selectedItemToDelete.isEmpty())
+                {
+                    DatabaseReference sampleRef = myRef.child(selectedItemToDelete);
+                    sampleRef.removeValue();
+
+                    // Reloading fragment
+                    DisplayExpenseFragment frag = new DisplayExpenseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(kStartDate, startDate);
+                    bundle.putString(kEndDate, endDate);
+                    bundle.putString(kTag, tag);
+
+                    frag.setArguments(bundle);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragmentContainer, frag);
+                    ft.addToBackStack("addExpense");
+                    ft.commit();
+
+                }
+            }
+        });
+
+
         Button endDateBtn = view.findViewById(R.id.endDateButton);
         endDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,7 +376,14 @@ public class DisplayExpenseFragment extends Fragment {
                     LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     linearLayout.setLayoutParams(linearParams);
-
+                    linearLayout.setClickable(true);
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("ERROR","OnClicked");
+                            Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     ScrollView scroll = new ScrollView(getContext());
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     scroll.setLayoutParams(layoutParams);
@@ -374,6 +423,17 @@ public class DisplayExpenseFragment extends Fragment {
                         amountText.setText(post.getAmount().toString());
                         totalAmount = totalAmount + post.getAmount();
                         card.addView(temp);
+                        card.setClickable(true);
+                        card.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+//                                TextView dateTxt = view.findViewById(R.id.dateTxt);
+//                                TextView tagTxt = view.findViewById(R.id.tagTxt);
+//                                TextView amountTxt = view.findViewById(R.id.amountTxt);
+//                                TextView commentTxt = view.findViewById(R.id.commentTxt);
+                                selectedItemToDelete = obj.getKey().toString();
+                            }
+                        });
                         linearLayout.addView(card);
                     }
 
@@ -442,6 +502,17 @@ public class DisplayExpenseFragment extends Fragment {
                         amountText.setText(post.getAmount().toString());
                         totalAmount = totalAmount + post.getAmount();
                         card.addView(temp);
+                        card.setClickable(true);
+                        card.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+//                                TextView dateTxt = view.findViewById(R.id.dateTxt);
+//                                TextView tagTxt = view.findViewById(R.id.tagTxt);
+//                                TextView amountTxt = view.findViewById(R.id.amountTxt);
+//                                TextView commentTxt = view.findViewById(R.id.commentTxt);
+                                selectedItemToDelete = obj.getKey().toString();
+                            }
+                        });
                         linearLayout.addView(card);
                     }
 

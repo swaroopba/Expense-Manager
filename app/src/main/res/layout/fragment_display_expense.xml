@@ -43,6 +43,13 @@
             android:layout_weight="1"
             android:text="EndDate"
             />
+        <Button
+            android:id="@+id/deleteMeButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="Del"
+            />
     </LinearLayout>
 
     <LinearLayout
