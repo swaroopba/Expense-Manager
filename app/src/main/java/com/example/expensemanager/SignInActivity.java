@@ -44,10 +44,6 @@ public class SignInActivity<Integer> extends AppCompatActivity {
             storeGoogleSignInDetails(account);
             launchEntranceActivity();
         }
-//        else{
-//            Bundle bundle = new Bundle();
-//            onCreate(bundle);
-//        }
     }
 
     @Override
@@ -55,16 +51,15 @@ public class SignInActivity<Integer> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        String signInMessage = "Sign in with your account.";
-        Spannable span = new SpannableString(signInMessage);
-        span.setSpan(new RelativeSizeSpan(1.5f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        TextView signIn = findViewById(R.id.titleName);
-        signIn.setText(span);
-
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         screenWidth = screenSize.x;
         screenHeight = screenSize.y;
+
+        String signInMessage = "Sign in with your account.";
+        TextView signIn = findViewById(R.id.titleName);
+        signIn.setTextSize(screenWidth * 0.02f);
+        signIn.setText(signInMessage);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()

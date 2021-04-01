@@ -242,7 +242,7 @@ public class DisplayExpenseFragment extends Fragment {
         deleteBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!selectedItemToDelete.isEmpty())
+                if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
                 {
                     DatabaseReference sampleRef = myRef.child(selectedItemToDelete);
                     sampleRef.removeValue();
@@ -413,8 +413,7 @@ public class DisplayExpenseFragment extends Fragment {
                         temp.setLayoutParams(param);
                         CardView card = new CardView(getContext());
                         card.setRadius(2);
-                        card.setCardBackgroundColor(getResources().getColor(R.color.purple_200));
-
+                        card.setBackgroundResource(R.drawable.normal_display);
 
                         TextView dateText = temp.findViewById(R.id.dateTxt);
                         dateText.setText(getDateFromMillis(post.getDate()));
@@ -430,10 +429,7 @@ public class DisplayExpenseFragment extends Fragment {
                         card.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-//                                TextView dateTxt = view.findViewById(R.id.dateTxt);
-//                                TextView tagTxt = view.findViewById(R.id.tagTxt);
-//                                TextView amountTxt = view.findViewById(R.id.amountTxt);
-//                                TextView commentTxt = view.findViewById(R.id.commentTxt);
+                                card.setBackgroundResource(R.drawable.selected_display);
                                 selectedItemToDelete = obj.getKey().toString();
                             }
                         });
@@ -445,6 +441,9 @@ public class DisplayExpenseFragment extends Fragment {
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     TextView totalText = new TextView(getContext());
                     totalText.setText("Total Amount:  ");
+                    totalText.setTextColor(getResources().getColor(R.color.white));
+                    totalText.setTextSize(screenWidth * 0.02f);
+                    totalLayout.setBackgroundColor(getResources().getColor(R.color.red));
                     totalLayout.addView(totalText);
 
                     TextView totalAmt = new TextView(getContext());
@@ -492,7 +491,7 @@ public class DisplayExpenseFragment extends Fragment {
                         temp.setLayoutParams(param);
                         CardView card = new CardView(getContext());
                         card.setRadius(2);
-                        card.setCardBackgroundColor(getResources().getColor(R.color.purple_200));
+                        card.setBackgroundResource(R.drawable.normal_display);
 
 
                         TextView dateText = temp.findViewById(R.id.dateTxt);
@@ -509,10 +508,7 @@ public class DisplayExpenseFragment extends Fragment {
                         card.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-//                                TextView dateTxt = view.findViewById(R.id.dateTxt);
-//                                TextView tagTxt = view.findViewById(R.id.tagTxt);
-//                                TextView amountTxt = view.findViewById(R.id.amountTxt);
-//                                TextView commentTxt = view.findViewById(R.id.commentTxt);
+                                card.setBackgroundResource(R.drawable.selected_display);
                                 selectedItemToDelete = obj.getKey().toString();
                             }
                         });

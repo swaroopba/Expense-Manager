@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class DateSelectionFragment extends Fragment {
                     if (date != 1)
                     {
                         down1.setEnabled(true);
-                        up1.setBackground(getResources().getDrawable(R.drawable.custom_button));
+                        down1.setBackground(getResources().getDrawable(R.drawable.custom_button));
                     }
                     dateText.setText(date.toString());
                 }
@@ -123,11 +124,13 @@ public class DateSelectionFragment extends Fragment {
                     if (month == 12)
                     {
                         up2.setEnabled(false);
+                        up2.setBackground(getResources().getDrawable(R.drawable.disabled_button));
                     }
 
                     if (month != 1)
                     {
                         down2.setEnabled(true);
+                        down2.setBackground(getResources().getDrawable(R.drawable.custom_button));
                     }
                     monthText.setText(month.toString());
 
@@ -161,11 +164,13 @@ public class DateSelectionFragment extends Fragment {
                     if (date == 1)
                     {
                         down1.setEnabled(false);
+                        down1.setBackground(getResources().getDrawable(R.drawable.disabled_button));
                     }
 
                     if (date != totalDays)
                     {
                         up1.setEnabled(true);
+                        up1.setBackground(getResources().getDrawable(R.drawable.custom_button));
                     }
                     dateText.setText(date.toString());
                 }
@@ -182,11 +187,13 @@ public class DateSelectionFragment extends Fragment {
                     if (month == 1)
                     {
                         down2.setEnabled(false);
+                        down2.setBackground(getResources().getDrawable(R.drawable.disabled_button));
                     }
 
                     if (month != 12)
                     {
                         up2.setEnabled(true);
+                        up2.setBackground(getResources().getDrawable(R.drawable.custom_button));
                     }
                     monthText.setText(month.toString());
 

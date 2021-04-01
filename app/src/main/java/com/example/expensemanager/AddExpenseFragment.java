@@ -168,6 +168,7 @@ public class AddExpenseFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("ERROR","Add click reached");
                 String date = dateTextValue;
                 Double amount = 0.0;
                 amount = Double.parseDouble(amountText.getText().toString());
