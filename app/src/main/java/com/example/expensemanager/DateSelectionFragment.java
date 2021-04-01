@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -34,7 +35,7 @@ public class DateSelectionFragment extends Fragment {
     private TextView dateText;
     private TextView monthText;
     private TextView yearText;
-    private Button up1;
+    private ImageButton up1;
     private Boolean isCalledForFiltering;
     private String tag;
     private String startDate;
@@ -76,12 +77,12 @@ public class DateSelectionFragment extends Fragment {
         monthText = view.findViewById(R.id.monthText);
         yearText = view.findViewById(R.id.yearText);
 
-        up1 = view.findViewById(R.id.up1);
-        Button up2 = view.findViewById(R.id.up2);
-        Button up3 = view.findViewById(R.id.up3);
-        Button down1 = view.findViewById(R.id.down1);
-        Button down2 = view.findViewById(R.id.down2);
-        Button down3 = view.findViewById(R.id.down3);
+        up1 = (ImageButton) view.findViewById(R.id.up1);
+        ImageButton up2 = view.findViewById(R.id.up2);
+        ImageButton up3 = view.findViewById(R.id.up3);
+        ImageButton down1 = view.findViewById(R.id.down1);
+        ImageButton down2 = view.findViewById(R.id.down2);
+        ImageButton down3 = view.findViewById(R.id.down3);
 
         dateText.setText(date.toString());
         monthText.setText(month.toString());
@@ -99,11 +100,13 @@ public class DateSelectionFragment extends Fragment {
                     if (date == totalDays)
                     {
                         up1.setEnabled(false);
+                        up1.setBackground(getResources().getDrawable(R.drawable.disabled_button));
                     }
 
                     if (date != 1)
                     {
                         down1.setEnabled(true);
+                        up1.setBackground(getResources().getDrawable(R.drawable.custom_button));
                     }
                     dateText.setText(date.toString());
                 }

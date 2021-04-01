@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CalenderFragment"
-    android:background="@color/white"
+    android:background="@color/light_yellow"
     android:layout_margin="10dp">
     <GridLayout
         android:layout_width="match_parent"
@@ -15,12 +15,15 @@
         >
         <Button
             android:id="@+id/last"
-            android:text="last"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnSpan="2"
             android:layout_width="0dp"
+            android:text="LAST"
             android:layout_columnWeight="2"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date"
@@ -30,60 +33,93 @@
             android:layout_columnSpan="3"
             android:layout_width="0dp"
             android:layout_columnWeight="3"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/next"
-            android:text="Next"
+            android:text="NEXT"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnSpan="2"
             android:layout_width="0dp"
             android:layout_columnWeight="2"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
-         Days
         <Button
+            android:id="@+id/Day1"
             android:text="S"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
+            android:id="@+id/Day2"
             android:text="M"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
+            android:id="@+id/Day3"
             android:text="T"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
+            android:id="@+id/Day4"
             android:text="W"
             android:layout_height="0dp"
             android:layout_width="0dp"
             android:layout_rowWeight="1"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
+            android:id="@+id/Day5"
             android:text="T"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
+            android:id="@+id/Day6"
             android:text="F"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
+            android:id="@+id/Day7"
             android:text="S"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_width="0dp"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
         <!-- Dates -->
         <!-- 1 -->
@@ -94,6 +130,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date2"
@@ -102,6 +141,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date3"
@@ -110,6 +152,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date4"
@@ -118,6 +163,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date5"
@@ -126,6 +174,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date6"
@@ -134,6 +185,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
         <Button
             android:id="@+id/date7"
@@ -142,6 +196,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"
             />
 
         <!-- 2 -->
@@ -152,7 +209,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date9"
             android:tag="9"
@@ -160,7 +219,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date10"
             android:tag="10"
@@ -168,7 +229,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date11"
             android:tag="11"
@@ -176,7 +239,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date12"
             android:tag="12"
@@ -184,7 +249,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date13"
             android:tag="13"
@@ -192,7 +259,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date14"
             android:tag="14"
@@ -200,7 +269,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
         <!-- 3 -->
         <Button
@@ -210,7 +281,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date16"
             android:tag="16"
@@ -218,7 +291,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date17"
             android:tag="17"
@@ -226,7 +301,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date18"
             android:tag="18"
@@ -234,7 +311,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date19"
             android:tag="19"
@@ -242,7 +321,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date20"
             android:tag="20"
@@ -250,7 +331,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date21"
             android:tag="21"
@@ -258,7 +341,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
         <!-- 4 -->
         <Button
@@ -268,7 +353,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date23"
             android:tag="23"
@@ -276,7 +363,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date24"
             android:tag="24"
@@ -284,7 +373,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date25"
             android:tag="25"
@@ -292,7 +383,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date26"
             android:tag="26"
@@ -300,7 +393,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date27"
             android:tag="27"
@@ -308,7 +403,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date28"
             android:tag="28"
@@ -316,7 +413,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
         <!-- 5 -->
         <Button
@@ -326,7 +425,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date30"
             android:tag="30"
@@ -334,7 +435,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date31"
             android:tag="31"
@@ -342,7 +445,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date32"
             android:tag="32"
@@ -350,7 +455,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date33"
             android:tag="33"
@@ -358,7 +465,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date34"
             android:tag="34"
@@ -366,7 +475,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date35"
             android:tag="35"
@@ -374,7 +485,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
         <!-- 6 -->
         <Button
@@ -384,7 +497,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date37"
             android:tag="37"
@@ -392,7 +507,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date38"
             android:tag="38"
@@ -400,7 +517,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date39"
             android:tag="39"
@@ -408,7 +527,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date40"
             android:tag="40"
@@ -416,7 +537,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date41"
             android:tag="41"
@@ -424,7 +547,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
         <Button
             android:id="@+id/date42"
             android:tag="42"
@@ -432,7 +557,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            />
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:layout_margin="1dp"/>
 
 
     </GridLayout>

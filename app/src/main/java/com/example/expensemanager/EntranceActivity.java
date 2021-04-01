@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,6 +37,23 @@ public class EntranceActivity extends AppCompatActivity implements CalenderFragm
         Calendar cal = Calendar.getInstance();
         String date = cal.get(Calendar.DAY_OF_MONTH)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.YEAR);
         addFragment(date, true, false);
+    }
+
+    public void closeKeyboard(View view)
+    {
+        View view1 = getCurrentFocus();
+
+        if (view1 != null) {
+
+            // now assign the system
+            // service to InputMethodManager
+            InputMethodManager manager
+                    = (InputMethodManager)
+                    getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(
+                    view1.getWindowToken(), 0);
+        }
     }
 
     @Override

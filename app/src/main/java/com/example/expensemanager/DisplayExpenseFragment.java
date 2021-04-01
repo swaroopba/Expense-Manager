@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -146,7 +147,7 @@ public class DisplayExpenseFragment extends Fragment {
                     }
                 }
 
-                ArrayAdapter<String> newTagAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, tagData);
+                ArrayAdapter<String> newTagAdapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner, tagData);
                 newTagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tagSpinner.setAdapter(newTagAdapter);
 
@@ -171,7 +172,7 @@ public class DisplayExpenseFragment extends Fragment {
         }
 
 
-        ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, tagData);
+        ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner, tagData);
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagSpinner.setAdapter(tagAdapter);
         if (tag != tagData.get(0))
@@ -212,6 +213,7 @@ public class DisplayExpenseFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         Button startDateBtn = view.findViewById(R.id.startDateButton);
+        startDateBtn.setTextSize(screenWidth * 0.015f);
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,6 +238,7 @@ public class DisplayExpenseFragment extends Fragment {
 
 
         Button deleteBut = view.findViewById(R.id.deleteMeButton);
+        deleteBut.setTextSize(screenWidth * 0.02f);
         deleteBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,8 +264,8 @@ public class DisplayExpenseFragment extends Fragment {
             }
         });
 
-
         Button endDateBtn = view.findViewById(R.id.endDateButton);
+        endDateBtn.setTextSize(screenWidth * 0.015f);
         endDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

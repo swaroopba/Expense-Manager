@@ -2,6 +2,7 @@ package com.example.expensemanager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,6 +63,8 @@ public class AddExpenseFragment extends Fragment {
     private Set<String> tagSet;
     private Boolean areAllTagsRead;
     private String signInEmail;
+    private Integer m_screenWidth;
+    private Integer m_screenHeight;
 
     Spinner tagSpinner;
     ArrayList<String> tagData;
@@ -81,6 +85,11 @@ public class AddExpenseFragment extends Fragment {
             tagSet = new HashSet<>();
             areAllTagsRead = false;
 
+            Point screenSize = new Point();
+            getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
+            m_screenWidth = screenSize.x;
+            m_screenHeight = screenSize.y;
+
             String dateSplit[] = date.split("/");
             dayOfMonth = Integer.parseInt(dateSplit[0]);
             month = Integer.parseInt(dateSplit[1]);
@@ -100,9 +109,16 @@ public class AddExpenseFragment extends Fragment {
 
         TextView dateText = view.findViewById(R.id.dateStr);
         String dateTextValue = dayOfMonth.toString()+" "+getMonthName(month)+" "+year.toString();
-        Spannable span = new SpannableString(dateTextValue);
-        span.setSpan(new RelativeSizeSpan(1.5f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        dateText.setText(span);
+        dateText.setText(dateTextValue);
+        dateText.setTextSize(m_screenWidth*0.03f);
+
+        TextView amountStr = view.findViewById(R.id.amountStr);
+        TextView tagStr = view.findViewById(R.id.tagStr);
+        TextView commentStr = view.findViewById(R.id.commentStr);
+        commentStr.setTextSize(m_screenWidth*0.02f);
+        amountStr.setTextSize(m_screenWidth*0.02f);
+        tagStr.setTextSize(m_screenWidth*0.02f);
+
 
         EditText amountText = view.findViewById(R.id.amount);
         EditText newTag = view.findViewById(R.id.newTag);
@@ -113,18 +129,14 @@ public class AddExpenseFragment extends Fragment {
 
         getAvailableTags();
 
-        Log.d("ERROR", "tag1 size->"+tagSet.size());
 
             Iterator<String> tagIter = tagSet.iterator();
             while (tagIter.hasNext()) {
                 String tempTag = tagIter.next();
-                Log.d("ERROR", "temp string->" + tempTag);
                 if (!tempTag.equals("Choose One")) {
                     tagData.add(tempTag);
                 }
             }
-
-        Log.d("ERROR", "tag size->"+tagData.size());
 
         ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, tagData);
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -152,6 +164,7 @@ public class AddExpenseFragment extends Fragment {
         });
 
         Button addButton = view.findViewById(R.id.addBtn);
+        addButton.setTextSize(m_screenWidth*0.015f);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +188,7 @@ public class AddExpenseFragment extends Fragment {
         });
 
         Button cancelButton = view.findViewById(R.id.cancelBtn);
-
+        cancelButton.setTextSize(m_screenWidth*0.015f);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,12 +209,9 @@ public class AddExpenseFragment extends Fragment {
                 Iterable<DataSnapshot> iter = snapshot.getChildren();
                 for(DataSnapshot obj: iter)
                 {
-                    Log.d("ERROR", "Inside listener");
                     ExpenseEvent post = obj.getValue(ExpenseEvent.class);
-                    Log.d("ERROR", "new tag->"+post.getTag());
                     tagSet.add(post.getTag());
                 }
-                Log.d("ERROR","getAvailableTags .5");
 
                 Iterator<String> tagIter = tagSet.iterator();
                 while (tagIter.hasNext()) {
@@ -221,20 +231,10 @@ public class AddExpenseFragment extends Fragment {
 
             }
         });
-
-//        try {
-//            Log.d("ERROR","getAvailableTags 1");
-//            done.await();
-//        }catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-
     }
 
     private void addToDataBase(String date, Double amount, String tag, String comment)
     {
-            Log.d("ERROR","add to DB");
             ExpenseEvent newEvent = new ExpenseEvent(date, amount, tag, comment);
             myRef.child(signInEmail).child(kExpenseList).push().setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override

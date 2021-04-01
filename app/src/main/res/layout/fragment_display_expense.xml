@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".DisplayExpenseFragment"
     android:id="@+id/totalDisplayLinear"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/light_yellow"
+    android:layout_margin="10dp">
 
     <LinearLayout
         android:id="@+id/topFilters"
@@ -15,26 +17,32 @@
         <TextView
             android:id="@+id/tagFilter"
             android:layout_width="0dp"
+            android:gravity="center_vertical"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="Tag"
+            android:text="Tag:"
+            android:textColor="@color/white"
+            android:background="@drawable/custom_button"
             android:textSize="20sp"
             />
         <Spinner
-            android:layout_marginLeft="-20dp"
+            android:layout_marginLeft="-60dp"
+            android:layout_gravity="center_vertical"
             android:id="@+id/tagFilterVal"
             android:layout_width="0dp"
             android:layout_weight="1.5"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:clickable="true"
-            android:background="@color/purple_700"
+            android:background="@drawable/custom_button"
             />
         <Button
             android:id="@+id/startDateButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textColor="@color/white"
             android:text="StartDate"
+            android:background="@drawable/custom_button"
             />
         <Button
             android:id="@+id/endDateButton"
@@ -42,13 +50,18 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="EndDate"
+            android:textColor="@color/white"
+            android:background="@drawable/custom_button"
             />
         <Button
             android:id="@+id/deleteMeButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="Del"
+            android:layout_gravity="fill"
+            android:text="X"
+            android:textColor="@color/white"
+            android:background="@color/red"
             />
     </LinearLayout>
 

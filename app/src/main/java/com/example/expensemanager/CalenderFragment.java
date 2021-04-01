@@ -2,10 +2,10 @@ package com.example.expensemanager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Spannable;
@@ -18,8 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -36,13 +34,15 @@ public class CalenderFragment extends Fragment {
         public void onDatePressed(String message);
     }
 
-    private String dateString;
-    private Boolean isItCurrentDate;
-    private OnMessageTransaction onMessageTransaction;
-    private Integer date;
-    private Integer month;
-    private Integer year;
-    private Integer numDays;
+    private String m_dateString;
+    private Boolean m_isItCurrentDate;
+    private OnMessageTransaction m_onMessageTransaction;
+    private Integer m_date;
+    private Integer m_month;
+    private Integer m_year;
+    private Integer m_numDays;
+    private Integer m_screenWidth;
+    private Integer m_screenHeight;
 
     public CalenderFragment() {
         // Required empty public constructor
@@ -54,7 +54,7 @@ public class CalenderFragment extends Fragment {
 
         Activity activity = (Activity) context;
         try {
-            onMessageTransaction = (OnMessageTransaction)activity;
+            m_onMessageTransaction = (OnMessageTransaction)activity;
         }
         catch (ClassCastException e)
         {
@@ -67,9 +67,15 @@ public class CalenderFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            dateString = getArguments().getString(kDateString);
-            isItCurrentDate = getArguments().getBoolean(kIsItCurrentDate);
+            m_dateString = getArguments().getString(kDateString);
+            m_isItCurrentDate = getArguments().getBoolean(kIsItCurrentDate);
         }
+
+        Point screenSize = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
+        m_screenWidth = screenSize.x;
+        m_screenHeight = screenSize.y;
+
     }
 
     @Override
@@ -78,19 +84,19 @@ public class CalenderFragment extends Fragment {
 //        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calender, container, false);
 
-        String dateList[] = dateString.split("/");
-        date = Integer.parseInt(dateList[0]);
-        month = Integer.parseInt(dateList[1]);
-        year = Integer.parseInt(dateList[2]);
+        String dateList[] = m_dateString.split("/");
+        m_date = Integer.parseInt(dateList[0]);
+        m_month = Integer.parseInt(dateList[1]);
+        m_year = Integer.parseInt(dateList[2]);
 
         Calendar c2 = Calendar.getInstance();
-        c2.set(year, month-1, date);
+        c2.set(m_year, m_month -1, m_date);
         c2.set(Calendar.DAY_OF_MONTH, 1);
         Integer startDateMonth = c2.get(Calendar.DAY_OF_WEEK);
         Integer totalDaysInMonth = c2.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 
-        numDays = 1;
+        m_numDays = 1;
         for(Integer i = 1;i <= 42; i++ )
         {
             String id = "date" + i;
@@ -104,42 +110,51 @@ public class CalenderFragment extends Fragment {
             }
             else
             {
-                String tempStr = numDays.toString();
-                Spannable span = new SpannableString(tempStr);
-                span.setSpan(new RelativeSizeSpan(0.8f), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                refButton.setText(span);
+                String tempStr = m_numDays.toString();
+                refButton.setText(tempStr);
+                refButton.setTextSize(m_screenWidth*0.015f);
                 refButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         sendDate(refButton.getText().toString());
                     }
                 });
-                numDays = numDays + 1;
+                m_numDays = m_numDays + 1;
             }
         }
 
+
+        for(Integer i = 1;i <= 7; i++ ) {
+            String id = "Day" + i;
+            Button refButton = view.findViewById(getResources().getIdentifier(id, "id", getContext().getPackageName()));
+            refButton.setTextSize(m_screenWidth * 0.015f);
+        }
+
         Button tempDate = (Button) view.findViewById(R.id.date);
-        tempDate.setText(getMonthName(month)+" "+year);
+        tempDate.setText(getMonthName(m_month)+" "+ m_year);
+        tempDate.setTextSize(m_screenWidth*0.02f);
         tempDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMessageTransaction.onMonthYearPressed(date+"/"+month+"/"+year);
+                m_onMessageTransaction.onMonthYearPressed(m_date +"/"+ m_month +"/"+ m_year);
             }
         });
 
         Button lastButton = view.findViewById(R.id.last);
+        lastButton.setTextSize(m_screenWidth*0.02f);
         lastButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMessageTransaction.onPreviousMonthPressed(date+"/"+month+"/"+year);
+                m_onMessageTransaction.onPreviousMonthPressed(m_date +"/"+ m_month +"/"+ m_year);
             }
         });
 
         Button nextButton = view.findViewById(R.id.next);
+        nextButton.setTextSize(m_screenWidth*0.02f);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMessageTransaction.onNextMonthPressed(date+"/"+month+"/"+year);
+                m_onMessageTransaction.onNextMonthPressed(m_date +"/"+ m_month +"/"+ m_year);
             }
         });
 
@@ -148,8 +163,8 @@ public class CalenderFragment extends Fragment {
 
     private void sendDate(String day)
     {
-        String date = day + "/" + month + "/" + year;
-        onMessageTransaction.onDatePressed(date);
+        String date = day + "/" + m_month + "/" + m_year;
+        m_onMessageTransaction.onDatePressed(date);
     }
 
     private String getMonthName(Integer num)
