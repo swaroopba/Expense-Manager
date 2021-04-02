@@ -49,7 +49,9 @@
     <TextView
         android:id="@+id/amountTxt"
         android:layout_width="match_parent"
+        android:layout_marginRight="25dp"
         android:layout_height="0dp"
+        android:gravity="right"
         android:layout_weight="1"
         android:text="amount"
         android:textDirection="rtl"
@@ -57,9 +59,5 @@
         android:textStyle="bold"
         android:textColor="@color/white"
         />
-
-
-
-
 
 </LinearLayout>

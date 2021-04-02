@@ -62,7 +62,7 @@ public class DisplayExpenseFragment extends Fragment {
     Query queryToListen;
     Integer previousTagIndex;
     Boolean checkTag;
-    String selectedItemToDelete;
+    private Set<String> selectedItemToDelete;
     private Set<String> tagSet;
     private String signInEmail;
 
@@ -79,6 +79,7 @@ public class DisplayExpenseFragment extends Fragment {
         tag = "";
 
         tagSet = new HashSet<>();
+        selectedItemToDelete = new HashSet<>();
 
         startDate = getArguments().getString(kStartDate);
         endDate = getArguments().getString(kEndDate);
@@ -242,10 +243,14 @@ public class DisplayExpenseFragment extends Fragment {
         deleteBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
                 {
-                    DatabaseReference sampleRef = myRef.child(selectedItemToDelete);
-                    sampleRef.removeValue();
+                    Iterator<String> it = selectedItemToDelete.iterator();
+                    while (it.hasNext()) {
+                        DatabaseReference sampleRef = myRef.child(it.next());
+                        sampleRef.removeValue();
+                    }
 
                     // Reloading fragment
                     DisplayExpenseFragment frag = new DisplayExpenseFragment();
@@ -409,7 +414,7 @@ public class DisplayExpenseFragment extends Fragment {
 
                         LayoutInflater inflater = getLayoutInflater();
                         View temp = inflater.inflate(R.layout.display_element, null);
-                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 4);
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 5);
                         temp.setLayoutParams(param);
                         CardView card = new CardView(getContext());
                         card.setRadius(2);
@@ -429,8 +434,16 @@ public class DisplayExpenseFragment extends Fragment {
                         card.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                card.setBackgroundResource(R.drawable.selected_display);
-                                selectedItemToDelete = obj.getKey().toString();
+
+                                if (selectedItemToDelete.contains(obj.getKey()))
+                                {
+                                    card.setBackgroundResource(R.drawable.normal_display);
+                                    selectedItemToDelete.remove(obj.getKey());
+                                }
+                                else {
+                                    card.setBackgroundResource(R.drawable.selected_display);
+                                    selectedItemToDelete.add(obj.getKey());
+                                }
                             }
                         });
                         linearLayout.addView(card);
@@ -438,16 +451,25 @@ public class DisplayExpenseFragment extends Fragment {
 
                     LinearLayout totalLayout = new LinearLayout(getContext());
                     totalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     TextView totalText = new TextView(getContext());
+                    LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                    p1.weight = 1f;
                     totalText.setText("Total Amount:  ");
+                    totalText.setLayoutParams(p1);
                     totalText.setTextColor(getResources().getColor(R.color.white));
                     totalText.setTextSize(screenWidth * 0.02f);
                     totalLayout.setBackgroundColor(getResources().getColor(R.color.red));
                     totalLayout.addView(totalText);
 
+                    View spaceView = new View(getContext());
+                    spaceView.setLayoutParams(p1);
+                    totalLayout.addView(spaceView);
+
                     TextView totalAmt = new TextView(getContext());
                     totalAmt.setText(totalAmount.toString());
+                    totalAmt.setLayoutParams(p1);
+                    totalAmt.setTextColor(getResources().getColor(R.color.white));
+                    totalAmt.setTextSize(screenWidth * 0.02f);
                     totalLayout.addView(totalAmt);
 
                     linearLayout.addView(totalLayout);
@@ -487,7 +509,7 @@ public class DisplayExpenseFragment extends Fragment {
 
                         LayoutInflater inflater = getLayoutInflater();
                         View temp = inflater.inflate(R.layout.display_element, null);
-                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 4);
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 5);
                         temp.setLayoutParams(param);
                         CardView card = new CardView(getContext());
                         card.setRadius(2);
@@ -508,8 +530,15 @@ public class DisplayExpenseFragment extends Fragment {
                         card.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                card.setBackgroundResource(R.drawable.selected_display);
-                                selectedItemToDelete = obj.getKey().toString();
+                                if (selectedItemToDelete.contains(obj.getKey()))
+                                {
+                                    card.setBackgroundResource(R.drawable.normal_display);
+                                    selectedItemToDelete.remove(obj.getKey());
+                                }
+                                else {
+                                    card.setBackgroundResource(R.drawable.selected_display);
+                                    selectedItemToDelete.add(obj.getKey());
+                                }
                             }
                         });
                         linearLayout.addView(card);
@@ -517,13 +546,25 @@ public class DisplayExpenseFragment extends Fragment {
 
                     LinearLayout totalLayout = new LinearLayout(getContext());
                     totalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     TextView totalText = new TextView(getContext());
+                    LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                    p1.weight = 1f;
                     totalText.setText("Total Amount:  ");
+                    totalText.setLayoutParams(p1);
+                    totalText.setTextColor(getResources().getColor(R.color.white));
+                    totalText.setTextSize(screenWidth * 0.02f);
+                    totalLayout.setBackgroundColor(getResources().getColor(R.color.red));
                     totalLayout.addView(totalText);
+
+                    View spaceView = new View(getContext());
+                    spaceView.setLayoutParams(p1);
+                    totalLayout.addView(spaceView);
 
                     TextView totalAmt = new TextView(getContext());
                     totalAmt.setText(totalAmount.toString());
+                    totalAmt.setLayoutParams(p1);
+                    totalAmt.setTextColor(getResources().getColor(R.color.white));
+                    totalAmt.setTextSize(screenWidth * 0.02f);
                     totalLayout.addView(totalAmt);
 
                     linearLayout.addView(totalLayout);
