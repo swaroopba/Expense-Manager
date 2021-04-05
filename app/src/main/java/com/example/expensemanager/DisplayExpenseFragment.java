@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -59,12 +60,21 @@ public class DisplayExpenseFragment extends Fragment {
     String startDate;
     String endDate;
     String tag;
+    ArrayList<String> tagData;
     Query queryToListen;
     Integer previousTagIndex;
+    Integer numOfElements;
     Boolean checkTag;
+    Long lastDateTime;
+    Long firstDateTime;
     private Set<String> selectedItemToDelete;
     private Set<String> tagSet;
     private String signInEmail;
+    Boolean isQueryHasNoChildren;
+    ValueEventListener valueEventListener;
+    ValueEventListener oldListener;
+    Boolean isScrollDoneByUser;
+    Integer isTopReached, isBottomReached;
 
     public DisplayExpenseFragment() {
         // Required empty public constructor
@@ -77,6 +87,7 @@ public class DisplayExpenseFragment extends Fragment {
         startDate = "";
         endDate = "";
         tag = "";
+        isQueryHasNoChildren = false;
 
         tagSet = new HashSet<>();
         selectedItemToDelete = new HashSet<>();
@@ -126,7 +137,7 @@ public class DisplayExpenseFragment extends Fragment {
         LinearLayout.LayoutParams filterParam = new LinearLayout.LayoutParams(screenWidth, screenHeight/12);
         filterLinear.setLayoutParams(filterParam);
 
-        ArrayList<String> tagData = new ArrayList<String>();
+        tagData = new ArrayList<String>();
         tagData.add("Choose One");
         Spinner tagSpinner = view.findViewById(R.id.tagFilterVal);
 
@@ -244,28 +255,31 @@ public class DisplayExpenseFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
-                {
-                    Iterator<String> it = selectedItemToDelete.iterator();
-                    while (it.hasNext()) {
-                        DatabaseReference sampleRef = myRef.child(it.next());
-                        sampleRef.removeValue();
-                    }
-
-                    // Reloading fragment
-                    DisplayExpenseFragment frag = new DisplayExpenseFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(kStartDate, startDate);
-                    bundle.putString(kEndDate, endDate);
-                    bundle.putString(kTag, tag);
-
-                    frag.setArguments(bundle);
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.fragmentContainer, frag);
-                    ft.addToBackStack("addExpense");
-                    ft.commit();
-
-                }
+//                if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
+//                {
+//                    Iterator<String> it = selectedItemToDelete.iterator();
+//                    while (it.hasNext()) {
+//                        DatabaseReference sampleRef = myRef.child(it.next());
+//                        sampleRef.removeValue();
+//                    }
+//
+//                    // Reloading fragment
+//                    DisplayExpenseFragment frag = new DisplayExpenseFragment();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString(kStartDate, startDate);
+//                    bundle.putString(kEndDate, endDate);
+//                    bundle.putString(kTag, tag);
+//
+//                    frag.setArguments(bundle);
+//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                    ft.replace(R.id.fragmentContainer, frag);
+//                    ft.addToBackStack("addExpense");
+//                    ft.commit();
+//
+//                }
+                Log.d("SRS", "Reached delete button");
+                Query sampleQuery = myRef.orderByChild("tag").equalTo("green").limitToLast(5);
+                AddElementsToDisplay(sampleQuery, displayLinear);
             }
         });
 
@@ -291,6 +305,15 @@ public class DisplayExpenseFragment extends Fragment {
             }
         });
 
+
+        //PrepareQuery(false,false, 0l);
+        //AddElementsToDisplay(queryToListen, displayLinear);
+
+        return view;
+    }
+
+    private void PrepareQuery(Boolean isParamSend, Boolean isStartDate, Long sendDate)
+    {
         if ((!tag.isEmpty()) || (!startDate.isEmpty()) || (!endDate.isEmpty()))
         {
             Log.d("ERROR", "if reached");
@@ -311,7 +334,6 @@ public class DisplayExpenseFragment extends Fragment {
                 Calendar cali = Calendar.getInstance();
                 cali.set(yearDigit, monthDigit-1, dateDigit, 0,0,0);
                 startDateInMillis = cali.getTimeInMillis();
-
             }
 
             if (!endDate.isEmpty())
@@ -331,258 +353,310 @@ public class DisplayExpenseFragment extends Fragment {
 
             }
 
-            Log.d("ERROR","Millis_start"+startDateInMillis);
-            Log.d("ERROR","Millis_end"+endDateInMillis);
-
             if ((!tag.isEmpty() || !tag.equals("Choose One")) && !startDate.isEmpty() && !endDate.isEmpty()) {
                 Log.d("ERROR", "1...");
                 checkTag = true;
-                queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString()+"_"+tag).endBefore(endDateInMillis.toString()+"_"+tag);
-            }
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).endBefore(endDateInMillis.toString() + "_" + tag).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(sendDate.toString() + "_" + tag).limitToLast(5);
+                    }
+                }
+                else {
+                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(endDateInMillis.toString() + "_" + tag).limitToLast(5);
+                }
+                }
             else if(((!tag.isEmpty() || !tag.equals("Choose One")) && !startDate.isEmpty() && endDate.isEmpty()))
             {
                 checkTag = true;
                 Log.d("ERROR", "2...");
-                queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString()+"_"+tag);
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(sendDate.toString()+ "_"+tag).limitToLast(5);
+                    }
+                }
+                else {
+                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).limitToLast(5);
+                }
             }
             else if(((!tag.isEmpty() || !tag.equals("Choose One")) && startDate.isEmpty() && !endDate.isEmpty()))
             {
                 checkTag = true;
                 Log.d("ERROR", "3...");
-                queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag);
-            }
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag).startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date_tag").endBefore(sendDate.toString()+ "_"+tag).limitToLast(5);
+                    }
+                }
+                else{
+                queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag).limitToLast(5);
+                }}
             else if(((tag.isEmpty() || tag.equals("Choose One")) && !startDate.isEmpty() && !endDate.isEmpty()))
             {
                 checkTag = false;
                 Log.d("ERROR", "4...");
-                queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).endBefore(endDateInMillis);
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis).startAfter(sendDate).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).startAfter(startDateInMillis).limitToLast(5);
+                    }
+                }
+                else {
+                    queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).endBefore(endDateInMillis).limitToLast(5);
+                }
             }
             else if((!tag.isEmpty() || !tag.equals("Choose One")) && startDate.isEmpty() && endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "5...");
-                queryToListen = myRef.orderByChild("tag").equalTo(tag);
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date_tag").endBefore(sendDate.toString() + "_" + tag).limitToLast(5);
+                    }
+                }else {
+                    queryToListen = myRef.orderByChild("tag").equalTo(tag).limitToLast(5);
+                }
             }
             else if((tag.isEmpty() || tag.equals("Choose One")) && !startDate.isEmpty() && endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "6...");
-                queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis);
-            }
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date").startAfter(sendDate).limitToLast(5);
+                    }
+                    else{
+                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).startAfter(startDateInMillis).limitToLast(5);
+                    }
+                }
+                else{
+                queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).limitToLast(5);
+            }}
             else if((tag.isEmpty() || tag.equals("Choose One")) && startDate.isEmpty() && !endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "7...");
-                queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis);
-            }
-
-            queryToListen.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    LinearLayout linearLayout = new LinearLayout(getContext());
-                    LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-                    linearLayout.setLayoutParams(linearParams);
-                    linearLayout.setClickable(true);
-                    linearLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Log.d("ERROR","OnClicked");
-                            Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    ScrollView scroll = new ScrollView(getContext());
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    scroll.setLayoutParams(layoutParams);
-                    scroll.addView(linearLayout);
-
-                    Double totalAmount = 0.0;
-                    Iterable<DataSnapshot> iter = snapshot.getChildren();
-                    for (DataSnapshot obj : iter) {
-                        ExpenseEvent post = obj.getValue(ExpenseEvent.class);
-                        Log.d("ERROR","Log before 1");
-                        Log.d("ERROR","tag me->"+tag);
-                        Log.d("ERROR","tag me1->"+post.getTag());
-                        if (checkTag) {
-                            if (!tag.equals(post.getTag())) {
-                                Log.d("ERROR","Log before 1.5");
-                                continue;
-                            }
-                        }
-                        Log.d("ERROR","Log before 2");
-
-                        LayoutInflater inflater = getLayoutInflater();
-                        View temp = inflater.inflate(R.layout.display_element, null);
-                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 5);
-                        temp.setLayoutParams(param);
-                        CardView card = new CardView(getContext());
-                        card.setRadius(2);
-                        card.setBackgroundResource(R.drawable.normal_display);
-
-                        TextView dateText = temp.findViewById(R.id.dateTxt);
-                        dateText.setText(getDateFromMillis(post.getDate()));
-                        TextView tagText = temp.findViewById(R.id.tagTxt);
-                        tagText.setText(post.getTag());
-                        TextView commentText = temp.findViewById(R.id.commentTxt);
-                        commentText.setText(post.getComment());
-                        TextView amountText = temp.findViewById(R.id.amountTxt);
-                        amountText.setText(post.getAmount().toString());
-                        totalAmount = totalAmount + post.getAmount();
-                        card.addView(temp);
-                        card.setClickable(true);
-                        card.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                if (selectedItemToDelete.contains(obj.getKey()))
-                                {
-                                    card.setBackgroundResource(R.drawable.normal_display);
-                                    selectedItemToDelete.remove(obj.getKey());
-                                }
-                                else {
-                                    card.setBackgroundResource(R.drawable.selected_display);
-                                    selectedItemToDelete.add(obj.getKey());
-                                }
-                            }
-                        });
-                        linearLayout.addView(card);
+                if (isParamSend)
+                {
+                    if (isStartDate)
+                    {
+                        queryToListen = myRef.orderByChild("date").startAfter(sendDate).endBefore(endDateInMillis).limitToLast(5);
                     }
-
-                    LinearLayout totalLayout = new LinearLayout(getContext());
-                    totalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    TextView totalText = new TextView(getContext());
-                    LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-                    p1.weight = 1f;
-                    totalText.setText("Total Amount:  ");
-                    totalText.setLayoutParams(p1);
-                    totalText.setTextColor(getResources().getColor(R.color.white));
-                    totalText.setTextSize(screenWidth * 0.02f);
-                    totalLayout.setBackgroundColor(getResources().getColor(R.color.red));
-                    totalLayout.addView(totalText);
-
-                    View spaceView = new View(getContext());
-                    spaceView.setLayoutParams(p1);
-                    totalLayout.addView(spaceView);
-
-                    TextView totalAmt = new TextView(getContext());
-                    totalAmt.setText(totalAmount.toString());
-                    totalAmt.setLayoutParams(p1);
-                    totalAmt.setTextColor(getResources().getColor(R.color.white));
-                    totalAmt.setTextSize(screenWidth * 0.02f);
-                    totalLayout.addView(totalAmt);
-
-                    linearLayout.addView(totalLayout);
-
-                    displayLinear.addView(scroll);
-                    checkTag = false;
+                    else{
+                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).limitToLast(5);
+                    }
+                }else{
+                queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis).limitToLast(5);
                 }
-
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    System.out.println("The read failed: " + error.getCode());
-                }
-            });
-
+            }
         }
         else {
-            Log.d("ERROR","else reached");
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    LinearLayout linearLayout = new LinearLayout(getContext());
-                    LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-                    linearLayout.setLayoutParams(linearParams);
-
-                    ScrollView scroll = new ScrollView(getContext());
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    scroll.setLayoutParams(layoutParams);
-                    scroll.addView(linearLayout);
-
-                    Double totalAmount = 0.0;
-                    Iterable<DataSnapshot> iter = snapshot.getChildren();
-                    for (DataSnapshot obj : iter) {
-                        ExpenseEvent post = obj.getValue(ExpenseEvent.class);
-
-                        LayoutInflater inflater = getLayoutInflater();
-                        View temp = inflater.inflate(R.layout.display_element, null);
-                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 5);
-                        temp.setLayoutParams(param);
-                        CardView card = new CardView(getContext());
-                        card.setRadius(2);
-                        card.setBackgroundResource(R.drawable.normal_display);
-
-
-                        TextView dateText = temp.findViewById(R.id.dateTxt);
-                        dateText.setText(getDateFromMillis(post.getDate()));
-                        TextView tagText = temp.findViewById(R.id.tagTxt);
-                        tagText.setText(post.getTag());
-                        TextView commentText = temp.findViewById(R.id.commentTxt);
-                        commentText.setText(post.getComment());
-                        TextView amountText = temp.findViewById(R.id.amountTxt);
-                        amountText.setText(post.getAmount().toString());
-                        totalAmount = totalAmount + post.getAmount();
-                        card.addView(temp);
-                        card.setClickable(true);
-                        card.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (selectedItemToDelete.contains(obj.getKey()))
-                                {
-                                    card.setBackgroundResource(R.drawable.normal_display);
-                                    selectedItemToDelete.remove(obj.getKey());
-                                }
-                                else {
-                                    card.setBackgroundResource(R.drawable.selected_display);
-                                    selectedItemToDelete.add(obj.getKey());
-                                }
-                            }
-                        });
-                        linearLayout.addView(card);
-                    }
-
-                    LinearLayout totalLayout = new LinearLayout(getContext());
-                    totalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    TextView totalText = new TextView(getContext());
-                    LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-                    p1.weight = 1f;
-                    totalText.setText("Total Amount:  ");
-                    totalText.setLayoutParams(p1);
-                    totalText.setTextColor(getResources().getColor(R.color.white));
-                    totalText.setTextSize(screenWidth * 0.02f);
-                    totalLayout.setBackgroundColor(getResources().getColor(R.color.red));
-                    totalLayout.addView(totalText);
-
-                    View spaceView = new View(getContext());
-                    spaceView.setLayoutParams(p1);
-                    totalLayout.addView(spaceView);
-
-                    TextView totalAmt = new TextView(getContext());
-                    totalAmt.setText(totalAmount.toString());
-                    totalAmt.setLayoutParams(p1);
-                    totalAmt.setTextColor(getResources().getColor(R.color.white));
-                    totalAmt.setTextSize(screenWidth * 0.02f);
-                    totalLayout.addView(totalAmt);
-
-                    linearLayout.addView(totalLayout);
-
-                    displayLinear.addView(scroll);
+            if (isParamSend)
+            {
+                Log.d("SRS","Param send");
+                if (isStartDate)
+                {
+                    Log.d("SRS","startDate"+startDate);
+                    queryToListen = myRef.orderByChild("date").endBefore(sendDate).limitToLast(5);
                 }
-
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    System.out.println("The read failed: " + error.getCode());
+                else{
+                    Log.d("SRS", "endDate");
+                    queryToListen = myRef.orderByChild("date").startAfter(sendDate).limitToLast(5);
                 }
-            });
+            }
+            else {
+                Log.d("SRS", "else case reached");
+                queryToListen = myRef.orderByChild("date").limitToLast(5);
+            }
         }
-
-        return view;
     }
 
+    private void AddElementsToDisplay(Query queryToListen, LinearLayout displayLinear)
+    {
+            isScrollDoneByUser = false;
+
+            queryToListen.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                LinearLayout linearLayout = new LinearLayout(getContext());
+                LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.setLayoutParams(linearParams);
+
+                ScrollView scroll = new ScrollView(getContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                scroll.setLayoutParams(layoutParams);
+                scroll.addView(linearLayout);
+                scroll.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+
+//                        View view = scroll.getChildAt(scroll.getChildCount() - 1);
+//                        int topDetector = scroll.getScrollY();
+//                        int bottomDetector = view.getBottom() - (scroll.getHeight() + scroll.getScrollY());
+//                        if(bottomDetector == 0 ){
+//                            Log.d("SRS", "Reached scoll down");
+//                            PrepareQuery(true, false, lastDateTime);
+//                            //queryToListen.removeEventListener(valueEventListener);
+//
+//
+//                        }
+//
+//                        if(topDetector <= 0){
+//                            Log.d("SRS", "Reached scoll up");
+//                            Log.d("SRS","query->"+queryToListen.toString());
+//                            queryToListen.removeEventListener(valueEventListener);
+//                            PrepareQuery(true, true, firstDateTime);
+//                            Query sample = myRef.orderByChild("date").endBefore(firstDateTime).limitToLast(5);
+//                            //displayLinear.removeAllViews();
+//                            if (isScrollDoneByUser) {
+//                                AddElementsToDisplay(sample, displayLinear);
+//
+////                                DisplayExpenseFragment frag = new DisplayExpenseFragment();
+////                                Bundle bundle = new Bundle();
+////                                bundle.putString(kStartDate, startDate);
+////                                bundle.putString(kEndDate, endDate);
+////                                bundle.putString(kTag, tag);
+////
+////                                frag.setArguments(bundle);
+////                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+////                                ft.replace(R.id.fragmentContainer, frag);
+////                                ft.addToBackStack("addExpense");
+////                                ft.commit();
+//                            }
+//                        }
+//                        else{
+//                            isScrollDoneByUser = true;
+//                        }
+
+                    }
+                });
+
+                scroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scroll.scrollTo(0, ((numOfElements) * screenHeight/5));
+                    }
+                });
+
+                numOfElements = 0;
+
+                Double totalAmount = 0.0;
+                Iterable<DataSnapshot> iter = snapshot.getChildren();
+                if(snapshot.getChildrenCount() == 0){ isQueryHasNoChildren = true; return;}
+                //queryToListen.removeEventListener(oldListener);
+                Boolean isFirst = true;
+                for (DataSnapshot obj : iter) {
+                    ExpenseEvent post = obj.getValue(ExpenseEvent.class);
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View temp = inflater.inflate(R.layout.display_element, null);
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(screenWidth, screenHeight / 5);
+                    temp.setLayoutParams(param);
+                    CardView card = new CardView(getContext());
+                    card.setRadius(2);
+                    card.setBackgroundResource(R.drawable.normal_display);
+
+                    numOfElements = numOfElements + 1;
+
+                    TextView dateText = temp.findViewById(R.id.dateTxt);
+                    if (isFirst)
+                    {
+                        firstDateTime = post.getDate();
+                        isFirst = false;
+                    }
+                    lastDateTime = post.getDate();
+                    Log.d("SRS", post.getDate().toString());
+                    dateText.setText(getDateFromMillis(post.getDate()));
+                    TextView tagText = temp.findViewById(R.id.tagTxt);
+                    tagText.setText(post.getTag());
+                    TextView commentText = temp.findViewById(R.id.commentTxt);
+                    commentText.setText(post.getComment());
+                    TextView amountText = temp.findViewById(R.id.amountTxt);
+                    amountText.setText(post.getAmount().toString());
+                    totalAmount = totalAmount + post.getAmount();
+                    card.addView(temp);
+                    card.setClickable(true);
+                    card.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (selectedItemToDelete.contains(obj.getKey()))
+                            {
+                                card.setBackgroundResource(R.drawable.normal_display);
+                                selectedItemToDelete.remove(obj.getKey());
+                            }
+                            else {
+                                card.setBackgroundResource(R.drawable.selected_display);
+                                selectedItemToDelete.add(obj.getKey());
+                            }
+                        }
+                    });
+                    linearLayout.addView(card);
+                }
+
+                LinearLayout totalLayout = new LinearLayout(getContext());
+                totalLayout.setOrientation(LinearLayout.HORIZONTAL);
+                TextView totalText = new TextView(getContext());
+                LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                p1.weight = 1f;
+                totalText.setText("Total Amount:  ");
+                totalText.setLayoutParams(p1);
+                totalText.setTextColor(getResources().getColor(R.color.white));
+                totalText.setTextSize(screenWidth * 0.02f);
+                totalLayout.setBackground(getResources().getDrawable(R.drawable.sample_border));
+                totalLayout.addView(totalText);
+
+                View spaceView = new View(getContext());
+                spaceView.setLayoutParams(p1);
+                totalLayout.addView(spaceView);
+
+                TextView totalAmt = new TextView(getContext());
+                totalAmt.setText(totalAmount.toString());
+                totalAmt.setLayoutParams(p1);
+                totalAmt.setTextColor(getResources().getColor(R.color.white));
+                totalAmt.setTextSize(screenWidth * 0.02f);
+                totalLayout.addView(totalAmt);
+
+                linearLayout.addView(totalLayout);
+
+                displayLinear.addView(scroll);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getCode());
+            }
+        });
+
+
+        Log.d("SRS","Finally added new value listener");
+    }
 
     private String getMonthName(Integer num)
     {
