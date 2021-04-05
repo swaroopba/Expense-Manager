@@ -255,31 +255,28 @@ public class DisplayExpenseFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-//                if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
-//                {
-//                    Iterator<String> it = selectedItemToDelete.iterator();
-//                    while (it.hasNext()) {
-//                        DatabaseReference sampleRef = myRef.child(it.next());
-//                        sampleRef.removeValue();
-//                    }
-//
-//                    // Reloading fragment
-//                    DisplayExpenseFragment frag = new DisplayExpenseFragment();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString(kStartDate, startDate);
-//                    bundle.putString(kEndDate, endDate);
-//                    bundle.putString(kTag, tag);
-//
-//                    frag.setArguments(bundle);
-//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                    ft.replace(R.id.fragmentContainer, frag);
-//                    ft.addToBackStack("addExpense");
-//                    ft.commit();
-//
-//                }
-                Log.d("SRS", "Reached delete button");
-                Query sampleQuery = myRef.orderByChild("tag").equalTo("green").limitToLast(5);
-                AddElementsToDisplay(sampleQuery, displayLinear);
+                if (selectedItemToDelete != null  && !selectedItemToDelete.isEmpty())
+                {
+                    Iterator<String> it = selectedItemToDelete.iterator();
+                    while (it.hasNext()) {
+                        DatabaseReference sampleRef = myRef.child(it.next());
+                        sampleRef.removeValue();
+                    }
+
+                    // Reloading fragment
+                    DisplayExpenseFragment frag = new DisplayExpenseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(kStartDate, startDate);
+                    bundle.putString(kEndDate, endDate);
+                    bundle.putString(kTag, tag);
+
+                    frag.setArguments(bundle);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragmentContainer, frag);
+                    ft.addToBackStack("addExpense");
+                    ft.commit();
+
+                }
             }
         });
 
@@ -306,13 +303,13 @@ public class DisplayExpenseFragment extends Fragment {
         });
 
 
-        //PrepareQuery(false,false, 0l);
-        //AddElementsToDisplay(queryToListen, displayLinear);
+        PrepareQuery();
+        AddElementsToDisplay(queryToListen, displayLinear);
 
         return view;
     }
 
-    private void PrepareQuery(Boolean isParamSend, Boolean isStartDate, Long sendDate)
+    private void PrepareQuery()
     {
         if ((!tag.isEmpty()) || (!startDate.isEmpty()) || (!endDate.isEmpty()))
         {
@@ -356,143 +353,63 @@ public class DisplayExpenseFragment extends Fragment {
             if ((!tag.isEmpty() || !tag.equals("Choose One")) && !startDate.isEmpty() && !endDate.isEmpty()) {
                 Log.d("ERROR", "1...");
                 checkTag = true;
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).endBefore(endDateInMillis.toString() + "_" + tag).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(sendDate.toString() + "_" + tag).limitToLast(5);
-                    }
-                }
-                else {
-                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(endDateInMillis.toString() + "_" + tag).limitToLast(5);
-                }
+
+                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(endDateInMillis.toString() + "_" + tag);
+
                 }
             else if(((!tag.isEmpty() || !tag.equals("Choose One")) && !startDate.isEmpty() && endDate.isEmpty()))
             {
                 checkTag = true;
                 Log.d("ERROR", "2...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).endBefore(sendDate.toString()+ "_"+tag).limitToLast(5);
-                    }
-                }
-                else {
-                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag).limitToLast(5);
-                }
+
+                    queryToListen = myRef.orderByChild("date_tag").startAfter(startDateInMillis.toString() + "_" + tag);
+
             }
             else if(((!tag.isEmpty() || !tag.equals("Choose One")) && startDate.isEmpty() && !endDate.isEmpty()))
             {
                 checkTag = true;
                 Log.d("ERROR", "3...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag).startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date_tag").endBefore(sendDate.toString()+ "_"+tag).limitToLast(5);
-                    }
+
+                queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag);
                 }
-                else{
-                queryToListen = myRef.orderByChild("date_tag").endBefore(endDateInMillis.toString()+"_"+tag).limitToLast(5);
-                }}
             else if(((tag.isEmpty() || tag.equals("Choose One")) && !startDate.isEmpty() && !endDate.isEmpty()))
             {
                 checkTag = false;
                 Log.d("ERROR", "4...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis).startAfter(sendDate).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).startAfter(startDateInMillis).limitToLast(5);
-                    }
-                }
-                else {
-                    queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).endBefore(endDateInMillis).limitToLast(5);
-                }
+
+
+                    queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).endBefore(endDateInMillis);
+
             }
             else if((!tag.isEmpty() || !tag.equals("Choose One")) && startDate.isEmpty() && endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "5...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date_tag").startAfter(sendDate.toString() + "_" + tag).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date_tag").endBefore(sendDate.toString() + "_" + tag).limitToLast(5);
-                    }
-                }else {
-                    queryToListen = myRef.orderByChild("tag").equalTo(tag).limitToLast(5);
-                }
+
+                    queryToListen = myRef.orderByChild("tag").equalTo(tag);
+
             }
             else if((tag.isEmpty() || tag.equals("Choose One")) && !startDate.isEmpty() && endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "6...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date").startAfter(sendDate).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).startAfter(startDateInMillis).limitToLast(5);
-                    }
-                }
-                else{
-                queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis).limitToLast(5);
-            }}
+
+                queryToListen = myRef.orderByChild("date").startAfter(startDateInMillis);
+            }
             else if((tag.isEmpty() || tag.equals("Choose One")) && startDate.isEmpty() && !endDate.isEmpty())
             {
                 checkTag = false;
                 Log.d("ERROR", "7...");
-                if (isParamSend)
-                {
-                    if (isStartDate)
-                    {
-                        queryToListen = myRef.orderByChild("date").startAfter(sendDate).endBefore(endDateInMillis).limitToLast(5);
-                    }
-                    else{
-                        queryToListen = myRef.orderByChild("date").endBefore(sendDate).limitToLast(5);
-                    }
-                }else{
-                queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis).limitToLast(5);
-                }
+
+                queryToListen = myRef.orderByChild("date").endBefore(endDateInMillis);
+
             }
         }
         else {
-            if (isParamSend)
-            {
-                Log.d("SRS","Param send");
-                if (isStartDate)
-                {
-                    Log.d("SRS","startDate"+startDate);
-                    queryToListen = myRef.orderByChild("date").endBefore(sendDate).limitToLast(5);
-                }
-                else{
-                    Log.d("SRS", "endDate");
-                    queryToListen = myRef.orderByChild("date").startAfter(sendDate).limitToLast(5);
-                }
-            }
-            else {
+
                 Log.d("SRS", "else case reached");
-                queryToListen = myRef.orderByChild("date").limitToLast(5);
-            }
+                queryToListen = myRef.orderByChild("date");
+
         }
     }
 
@@ -512,50 +429,6 @@ public class DisplayExpenseFragment extends Fragment {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 scroll.setLayoutParams(layoutParams);
                 scroll.addView(linearLayout);
-                scroll.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                    @Override
-                    public void onScrollChanged() {
-
-//                        View view = scroll.getChildAt(scroll.getChildCount() - 1);
-//                        int topDetector = scroll.getScrollY();
-//                        int bottomDetector = view.getBottom() - (scroll.getHeight() + scroll.getScrollY());
-//                        if(bottomDetector == 0 ){
-//                            Log.d("SRS", "Reached scoll down");
-//                            PrepareQuery(true, false, lastDateTime);
-//                            //queryToListen.removeEventListener(valueEventListener);
-//
-//
-//                        }
-//
-//                        if(topDetector <= 0){
-//                            Log.d("SRS", "Reached scoll up");
-//                            Log.d("SRS","query->"+queryToListen.toString());
-//                            queryToListen.removeEventListener(valueEventListener);
-//                            PrepareQuery(true, true, firstDateTime);
-//                            Query sample = myRef.orderByChild("date").endBefore(firstDateTime).limitToLast(5);
-//                            //displayLinear.removeAllViews();
-//                            if (isScrollDoneByUser) {
-//                                AddElementsToDisplay(sample, displayLinear);
-//
-////                                DisplayExpenseFragment frag = new DisplayExpenseFragment();
-////                                Bundle bundle = new Bundle();
-////                                bundle.putString(kStartDate, startDate);
-////                                bundle.putString(kEndDate, endDate);
-////                                bundle.putString(kTag, tag);
-////
-////                                frag.setArguments(bundle);
-////                                FragmentTransaction ft = getFragmentManager().beginTransaction();
-////                                ft.replace(R.id.fragmentContainer, frag);
-////                                ft.addToBackStack("addExpense");
-////                                ft.commit();
-//                            }
-//                        }
-//                        else{
-//                            isScrollDoneByUser = true;
-//                        }
-
-                    }
-                });
 
                 scroll.post(new Runnable() {
                     @Override

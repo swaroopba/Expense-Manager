@@ -43,6 +43,7 @@ public class CalenderFragment extends Fragment {
     private Integer m_numDays;
     private Integer m_screenWidth;
     private Integer m_screenHeight;
+    private Integer m_currentDate;
 
     public CalenderFragment() {
         // Required empty public constructor
@@ -76,6 +77,8 @@ public class CalenderFragment extends Fragment {
         m_screenWidth = screenSize.x;
         m_screenHeight = screenSize.y;
 
+        Calendar cal = Calendar.getInstance();
+        m_currentDate = cal.get(Calendar.DAY_OF_MONTH);
     }
 
     @Override
@@ -111,6 +114,10 @@ public class CalenderFragment extends Fragment {
             else
             {
                 String tempStr = m_numDays.toString();
+                if(m_numDays == m_currentDate)
+                {
+                    refButton.setBackgroundColor(getResources().getColor(R.color.purple_200));
+                }
                 refButton.setText(tempStr);
                 refButton.setTextSize(m_screenWidth*0.015f);
                 refButton.setOnClickListener(new View.OnClickListener() {
